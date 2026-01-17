@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VAST | Dashboard</title>
+    <style>
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; }
+        .sidebar { width: 260px; background: #161b22; height: 100vh; padding: 25px; border-right: 1px solid #30363d; position: fixed; }
+        .main { margin-left: 310px; padding: 40px; width: calc(100% - 350px); }
+        .card { background: #1c2128; padding: 25px; border-radius: 12px; border: 1px solid #30363d; margin-bottom: 30px; }
+        h2, h3 { color: #f78166; }
+        .btn { background: #f78166; border: none; padding: 10px 20px; color: white; border-radius: 6px; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .btn-green { background: #238636; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; color: #8b949e; border-bottom: 1px solid #30363d; padding: 10px; }
+        td { padding: 15px 10px; border-bottom: 1px solid #21262d; }
+        input[type="text"] { background: #0d1117; border: 1px solid #30363d; color: white; padding: 12px; border-radius: 6px; width: 250px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2 style="color:white;">🛡️ VAST SYSTEM</h2>
+        <hr style="border: 0.5px solid #30363d;">
+        <p>📊 Dashboard</p>
+        <p>📂 Projects</p>
+        <p>⚙️ Settings</p><br>
+        <a href="/logout" style="color: #f85149; text-decoration: none;">Log Out</a>
+    </div>
+
+    <div class="main">
+        <h1>Welcome, {{ current_user.username }}</h1>
+
+        <div class="card">
+            <h3>+ Create New Project</h3>
+            <form method="POST">
+                <input type="text" name="project_name" placeholder="Enter Project Name (e.g. MyAPI)" required>
+                <button type="submit" class="btn">Create Project</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>📜 Project Scan History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Last File Scanned</th>
+                        <th>Created Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in projects %}
+                    <tr>
+                        <td><strong>{{ p.name }}</strong></td>
+                        <td>
+                            {% if p.scans %}
+                                {{ p.scans[-1].filename }}
+                            {% else %}
+                                No scans yet
+                            {% endif %}
+                        </td>
+                        <td>{{ p.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td><a href="/analysis/{{ p.id }}" class="btn btn-green">Analyze / View Results</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

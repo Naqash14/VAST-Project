@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VAST | Join Community</title>
+    <style>
+        body { background: #0b0e14; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; }
+        .signup-card { 
+            background: #161b22; padding: 45px; border-radius: 24px; width: 400px; 
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+            border-top: 5px solid #6e40aa; animation: fadeIn 0.8s ease; 
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .avatar { 
+            width: 90px; height: 90px; background: linear-gradient(45deg, #6e40aa, #f78166); 
+            border-radius: 50%; margin: 0 auto 20px; display: flex; 
+            align-items: center; justify-content: center; font-size: 35px; 
+        }
+        
+        h2 { color: #ffffff; margin-bottom: 8px; font-weight: 600; }
+        p { color: #8b949e; font-size: 15px; margin-bottom: 30px; }
+        
+        /* Error Message Styling */
+        .flash-msg {
+            color: #f85149; background: rgba(248, 81, 73, 0.1); 
+            padding: 12px; border-radius: 10px; border: 1px solid #f85149; 
+            margin-bottom: 20px; font-size: 14px; text-align: left;
+        }
+
+        input { 
+            width: 100%; padding: 14px; margin: 10px 0; background: #0d1117; 
+            border: 1px solid #30363d; color: white; border-radius: 10px; 
+            box-sizing: border-box; outline: none; transition: 0.3s; 
+        }
+        input:focus { border-color: #f78166; box-shadow: 0 0 8px rgba(247, 129, 102, 0.2); }
+        
+        .btn { 
+            width: 100%; padding: 14px; background: linear-gradient(to right, #6e40aa, #f78166); 
+            border: none; color: white; border-radius: 10px; font-weight: bold; 
+            font-size: 16px; cursor: pointer; margin-top: 20px; transition: 0.3s; 
+        }
+        .btn:hover { transform: scale(1.03); opacity: 0.95; }
+        .login-link { color: #58a6ff; text-decoration: none; font-size: 14px; display: block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="signup-card">
+        <div class="avatar">🚀</div>
+        <h2>Join Our Community!</h2>
+        <p>Start your vulnerability analysis journey with VAST.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-msg">
+                ⚠️ {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="username" placeholder="Pick a username" required>
+            <input type="password" name="password" placeholder="Create a password" required>
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+        <a href="/login" class="login-link">Already have an account? Login here</a>
+    </div>
+</body>
+</html>

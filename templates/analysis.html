@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VAST | Analysis</title>
+    <style>
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; }
+        
+        /* Sidebar Styles */
+        .sidebar { width: 260px; background: #161b22; height: 100vh; padding: 25px; border-right: 1px solid #30363d; position: fixed; }
+        .logo-link { text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+        .logo-icon { color: #f78166; font-size: 24px; }
+        .logo-text { color: white; margin: 0; font-size: 22px; letter-spacing: 2px; font-weight: bold; }
+        .nav-item { color: #8b949e; display: block; padding: 10px 0; text-decoration: none; transition: 0.3s; }
+        .nav-item:hover { color: #f78166; }
+
+        /* Main Content Styles */
+        .main { margin-left: 310px; padding: 40px; width: calc(100% - 350px); }
+        .header-title { font-size: 28px; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-top: 20px; }
+        .panel { background: #1c2128; padding: 25px; border-radius: 12px; border: 1px solid #30363d; }
+        
+        textarea { 
+            width: 100%; height: 250px; background: #0d1117; color: #7ee787; 
+            border: 1px solid #30363d; padding: 15px; font-family: monospace; 
+            border-radius: 8px; box-sizing: border-box; resize: vertical;
+        }
+
+        .btn-scan { 
+            background: #238636; width: 100%; padding: 15px; color: white; 
+            border: none; border-radius: 8px; font-size: 16px; font-weight: bold; 
+            cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .btn-scan:hover { background: #2ea043; transform: translateY(-2px); }
+
+        /* Findings Section */
+        .results-container { margin-top: 40px; }
+        .results-box { 
+            background: #000; color: #d29922; padding: 25px; border-radius: 10px; 
+            font-family: 'Courier New', monospace; border-left: 5px solid #f78166; 
+            white-space: pre-wrap; line-height: 1.6; border: 1px solid #30363d;
+        }
+        .badge { padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-danger { background: #f85149; color: white; animation: pulse 2s infinite; }
+        .badge-success { background: #238636; color: white; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(248, 81, 73, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="{{ url_for('dashboard') }}" class="logo-link">
+            <span class="logo-icon">🛡️</span>
+            <h1 class="logo-text">VAST</h1>
+        </a>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="nav-item"> Dashboard</a>
+            <a href="#" class="nav-item">Projects</a>
+            <a href="#" class="nav-item" style="color: #f78166;"> Vulnerability Analysis</a>
+            <a href="/logout" class="nav-item" style="margin-top: 50px; color: #f85149;"> Logout</a>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="header-title">Vulnerability Analysis: <span style="color:#f78166;">{{ project.name }}</span></div>
+        <p style="color: #8b949e;">Upload your code or paste it directly to analyze for security vulnerabilities.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="grid">
+                <div class="panel">
+                    <h3 style="margin-top: 0;">Code Input</h3>
+                    <input type="file" name="file_upload" style="margin-bottom: 20px; color: #8b949e;"><br>
+                    <textarea name="code_input" placeholder="Or paste your C code here..."></textarea>
+                </div>
+
+                <div class="panel">
+                    <h3 style="margin-top: 0;">Analysis Tools</h3>
+                    <div style="background: #0d1117; padding: 15px; border-radius: 8px; border: 1px solid #30363d; margin-bottom: 10px;">
+                        <input type="checkbox" checked disabled> <strong>Semgrep</strong>
+                        <p style="font-size: 12px; color: #8b949e; margin: 5px 0 0 20px;">Pattern-based static analysis for C/C++.</p>
+                    </div>
+                    <div style="background: #0d1117; padding: 15px; border-radius: 8px; border: 1px solid #30363d; opacity: 0.5;">
+                        <input type="checkbox" disabled> <strong>KLEE</strong>
+                        <p style="font-size: 12px; color: #8b949e; margin: 5px 0 0 20px;">Symbolic Execution (Coming Soon).</p>
+                    </div>
+                    <button type="submit" class="btn-scan"> Run Analysis</button>
+                </div>
+            </div>
+        </form>
+
+        {% if results %}
+        <div class="results-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0;"> Findings</h3>
+                {% if "Code Finding" in results %}
+                    <span class="badge badge-danger"> VULNERABILITIES DETECTED</span>
+                {% else %}
+                    <span class="badge badge-success"> NO ISSUES FOUND</span>
+                {% endif %}
+            </div>
+
+            <div class="results-box">
+                <pre style="margin: 0; white-space: pre-wrap;">{{ results }}</pre>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
